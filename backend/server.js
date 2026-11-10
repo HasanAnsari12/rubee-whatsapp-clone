@@ -57,6 +57,16 @@ app.use("/api/stories", storyRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/webrtc", webrtcRoutes);
+
+// Health Check Endpoint (Render & Production Monitoring)
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptime: Math.floor(process.uptime()),
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  });
+});
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
